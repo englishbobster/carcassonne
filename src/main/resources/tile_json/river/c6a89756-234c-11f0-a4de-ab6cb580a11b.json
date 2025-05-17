@@ -1,0 +1,52 @@
+{
+  "id": "c6a89756-234c-11f0-a4de-ab6cb580a11b",
+  "version": 1,
+  "updatedAt": "2025-04-27",
+  "description": "River end A",
+  "expansion": "RIVER",
+  "activeFeatures": [],
+  "passiveFeatures": [],
+  "shields": 0,
+  "ports": [
+    {
+      "id": 1,
+      "type": "F",
+      "connections": [11]
+    },
+    {
+      "id": 2,
+      "type": "S",
+      "connections": []
+    },
+    {
+      "id": 3,
+      "type": "F",
+      "connections": [4]
+    },
+    {
+      "id": 4,
+      "type": "F",
+      "connections": [3]
+    },
+    {
+      "id": 5,
+      "type": "R",
+      "connections": []
+    },
+    {
+      "id": 6,
+      "type": "F",
+      "connections": []
+    },
+    {
+      "id": 8,
+      "type": "C",
+      "connections": []
+    },
+    {
+      "id": 11,
+      "type": "F",
+      "connections": [1]
+    }
+  ]
+}

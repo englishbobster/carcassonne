@@ -1,0 +1,7 @@
+spring:
+  application.name: carcassonne
+  datasource:
+    url: jdbc:postgresql://localhost:32779/carcassonne
+    password: meeple
+    username: meeple
+  flyway:

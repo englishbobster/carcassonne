@@ -1,0 +1,42 @@
+{
+  "id": "c8843724-234c-11f0-89d0-47b2c7eec364",
+  "version": 1,
+  "updatedAt": "2025-04-27",
+  "description": "River end B",
+  "expansion": "RIVER",
+  "activeFeatures": ["MONASTARY"],
+  "passiveFeatures": [],
+  "shields": 0,
+  "ports": [
+    {
+      "id": 1,
+      "type": "F",
+      "connections": [11,8,5,3]
+    },
+    {
+      "id": 2,
+      "type": "S",
+      "connections": []
+    },
+    {
+      "id": 3,
+      "type": "F",
+      "connections": [1,5,8,11]
+    },
+    {
+      "id": 5,
+      "type": "F",
+      "connections": [1,3,8,11]
+    },
+    {
+      "id": 8,
+      "type": "F",
+      "connections": [1,11,5,3]
+    },
+    {
+      "id": 11,
+      "type": "F",
+      "connections": [1,8,5,3]
+    }
+  ]
+}

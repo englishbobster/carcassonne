@@ -1,0 +1,52 @@
+{
+  "id": "93fb6dfc-2341-11f0-8b2e-eb8450f90dd0",
+  "version": 1,
+  "updatedAt": "2025-04-27",
+  "description": "River start left",
+  "expansion": "RIVER",
+  "activeFeatures": [],
+  "passiveFeatures": [],
+  "shields": 0,
+  "ports": [
+    {
+      "id": 2,
+      "type": "C",
+      "connections": []
+    },
+    {
+      "id": 4,
+      "type": "F",
+      "connections": []
+    },
+    {
+      "id": 5,
+      "type": "S",
+      "connections": [11]
+    },
+    {
+      "id": 6,
+      "type": "F",
+      "connections": [8,10]
+    },
+    {
+      "id": 8,
+      "type": "F",
+      "connections": [6,10]
+    },
+    {
+      "id": 10,
+      "type": "F",
+      "connections": [6,8]
+    },
+    {
+      "id": 11,
+      "type": "S",
+      "connections": [5]
+    },
+    {
+      "id": 12,
+      "type": "F",
+      "connections": []
+    }
+  ]
+}
