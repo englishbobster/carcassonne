@@ -4,9 +4,9 @@
   "updatedAt": "2025-04-27",
   "description": "a test json",
   "expansion": "ABBEY_AND_MAYOR",
-  "activeFeatures": [],
-  "passiveFeatures": [],
-  "shields": 0,
+  "activeFeatures": ["MONASTARY"],
+  "passiveFeatures": ["VINEYARD"],
+  "shields": 4,
   "ports": [
     {
       "id": 1,
