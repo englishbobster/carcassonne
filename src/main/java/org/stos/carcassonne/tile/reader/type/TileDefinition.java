@@ -1,4 +1,4 @@
-package org.stos.carcassonne.tile.reader;
+package org.stos.carcassonne.tile.reader.type;
 
 import java.time.LocalDate;
 import java.util.List;

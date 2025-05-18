@@ -1,22 +1,38 @@
 package org.stos.carcassonne.tile.reader;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.stos.carcassonne.tile.reader.TileDefinition.Port;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.stos.carcassonne.tile.reader.type.ActiveFeature;
+import org.stos.carcassonne.tile.reader.type.PassiveFeature;
+import org.stos.carcassonne.tile.reader.type.TileDefinition;
+import org.stos.carcassonne.tile.reader.type.TileDefinition.Port;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.stos.carcassonne.tile.reader.PortType.F;
-import static org.stos.carcassonne.tile.reader.PortType.R;
+import static org.stos.carcassonne.tile.reader.type.PortType.F;
+import static org.stos.carcassonne.tile.reader.type.PortType.R;
 
-public class TileResourceReaderTest {
+@ExtendWith(SpringExtension.class)
+public class TileResourceLoaderTest {
+
+    private TileResourceLoader tileResourceLoader;
+
+    @BeforeEach
+    void setUp() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+        tileResourceLoader = new TileResourceLoader(objectMapper);
+    }
 
     @Test
-    void read_a_tile() {
-        TileLoader tileLoader = new TileLoader();
-        TileDefinition tileDefinition = tileLoader.load();
+    void load_a_tile() {
+        TileDefinition tileDefinition = tileResourceLoader.load();
 
         TileDefinition expected = new TileDefinition(
                 UUID.fromString("c7c03a8a-196b-11f0-a65c-331b8482755b"),
@@ -42,6 +58,5 @@ public class TileResourceReaderTest {
 
         assertThat(tileDefinition).isEqualTo(expected);
     }
-
 
 }

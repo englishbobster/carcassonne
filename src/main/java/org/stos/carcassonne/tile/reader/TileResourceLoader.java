@@ -2,17 +2,19 @@ package org.stos.carcassonne.tile.reader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
+import org.stos.carcassonne.tile.reader.type.TileDefinition;
 
 import java.io.IOException;
 import java.io.InputStream;
 
+@Service
+public class TileResourceLoader {
 
-public class TileLoader {
+    private final ObjectMapper objectMapper;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-    public TileLoader() {
-        objectMapper.findAndRegisterModules();
+    public TileResourceLoader(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
     public TileDefinition load() {
