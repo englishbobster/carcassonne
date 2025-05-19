@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.stos.carcassonne.tile.reader.type.TileDefinition;
+import org.stos.carcassonne.tile.reader.type.TileDefinitionException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 @Service
 public class TileResourceLoader {
@@ -17,12 +19,24 @@ public class TileResourceLoader {
         this.objectMapper = objectMapper;
     }
 
-    public TileDefinition load() {
-        ClassPathResource resource = new ClassPathResource("test_data/test_tile.json");
+    public Optional<TileDefinition> load(String filePath) {
+        ClassPathResource resource = new ClassPathResource(filePath);
         try (InputStream inputStream = resource.getInputStream()) {
-            return objectMapper.readValue(inputStream, TileDefinition.class);
+            return Optional.of(objectMapper.readValue(inputStream, TileDefinition.class));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            unwrapAndThrowDomainUnchecked(e);
         }
+        return Optional.empty();
+    }
+
+    private static void unwrapAndThrowDomainUnchecked(IOException e) {
+        Throwable cause = e;
+        while (cause != null) {
+            if (cause instanceof TileDefinitionException tde) {
+                throw tde;
+            }
+            cause = cause.getCause();
+        }
+        throw new RuntimeException(e);
     }
 }

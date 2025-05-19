@@ -9,12 +9,15 @@ import org.stos.carcassonne.tile.reader.type.ActiveFeature;
 import org.stos.carcassonne.tile.reader.type.PassiveFeature;
 import org.stos.carcassonne.tile.reader.type.TileDefinition;
 import org.stos.carcassonne.tile.reader.type.TileDefinition.Port;
+import org.stos.carcassonne.tile.reader.type.TileDefinitionException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.stos.carcassonne.tile.reader.type.PortType.F;
 import static org.stos.carcassonne.tile.reader.type.PortType.R;
 
@@ -31,8 +34,8 @@ public class TileResourceLoaderTest {
     }
 
     @Test
-    void load_a_tile() {
-        TileDefinition tileDefinition = tileResourceLoader.load();
+    void loads_a_correct_tile() {
+        Optional<TileDefinition> tileDefinition = tileResourceLoader.load("test_data/correct_tile.json");
 
         TileDefinition expected = new TileDefinition(
                 UUID.fromString("c7c03a8a-196b-11f0-a65c-331b8482755b"),
@@ -56,7 +59,13 @@ public class TileResourceLoaderTest {
                         new Port(12, F, List.of(1))
                 ));
 
-        assertThat(tileDefinition).isEqualTo(expected);
+        assertThat(tileDefinition.orElseThrow()).isEqualTo(expected);
+    }
+
+    @Test
+    void does_not_load_when_road_not_in_center() {
+        assertThatExceptionOfType(TileDefinitionException.class)
+                .isThrownBy(() -> tileResourceLoader.load("test_data/road_error.json"));
     }
 
 }

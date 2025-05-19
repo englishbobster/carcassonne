@@ -15,9 +15,17 @@ import java.util.UUID;
             int shields,
             List<Port> ports
     ) {
-        public record Port(
+        public record Port (
                 int id,
                 PortType type,
                 List<Integer> connections
-        ) { }
+        ) {
+            private static final List<Integer> ROAD_PORTS = List.of(2, 5, 8, 11);
+
+            public Port {
+                if (!ROAD_PORTS.contains(id) && type == PortType.R) {
+                    throw new TileDefinitionException();
+                }
+            }
+        }
     }
