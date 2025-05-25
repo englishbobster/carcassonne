@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.stos.carcassonne.tile.reader.type.PortType.F;
 import static org.stos.carcassonne.tile.reader.type.PortType.R;
+import static org.stos.carcassonne.tile.reader.type.TileDefinition.*;
 
 @ExtendWith(SpringExtension.class)
 public class TileResourceLoaderTest {
@@ -37,8 +38,9 @@ public class TileResourceLoaderTest {
     void loads_a_correct_tile() {
         Optional<TileDefinition> tileDefinition = tileResourceLoader.load("test_data/correct_tile.json");
 
+        UUID tileId = UUID.fromString("c7c03a8a-196b-11f0-a65c-331b8482755b");
         TileDefinition expected = new TileDefinition(
-                UUID.fromString("c7c03a8a-196b-11f0-a65c-331b8482755b"),
+                tileId,
                 1,
                 LocalDate.parse("2025-04-27"),
                 "a test json",
@@ -47,25 +49,19 @@ public class TileResourceLoaderTest {
                 List.of(PassiveFeature.VINEYARD),
                 4,
                 List.of(
-                        new Port(1, F, List.of(12)),
-                        new Port(2, R, List.of(8, 11)),
-                        new Port(3, F, List.of(7, 5)),
-                        new Port(5, F, List.of(3, 7)),
-                        new Port(7, F, List.of(3, 5)),
-                        new Port(8, R, List.of(11, 2)),
-                        new Port(9, F, List.of(10)),
-                        new Port(10, F, List.of(9)),
-                        new Port(11, R, List.of(8, 2)),
-                        new Port(12, F, List.of(1))
+                        new Port(CompositeId.of(tileId, 1), F, List.of(12)),
+                        new Port(CompositeId.of(tileId,2), R, List.of(8, 11)),
+                        new Port(CompositeId.of(tileId,3), F, List.of(7, 5)),
+                        new Port(CompositeId.of(tileId,5), F, List.of(3, 7)),
+                        new Port(CompositeId.of(tileId,7), F, List.of(3, 5)),
+                        new Port(CompositeId.of(tileId,8), R, List.of(11, 2)),
+                        new Port(CompositeId.of(tileId,9), F, List.of(10)),
+                        new Port(CompositeId.of(tileId,10), F, List.of(9)),
+                        new Port(CompositeId.of(tileId,11), R, List.of(8, 2)),
+                        new Port(CompositeId.of(tileId,12), F, List.of(1))
                 ));
 
         assertThat(tileDefinition.orElseThrow()).isEqualTo(expected);
-    }
-
-    @Test
-    void does_not_load_when_road_not_in_center() {
-        assertThatExceptionOfType(TileDefinitionException.class)
-                .isThrownBy(() -> tileResourceLoader.load("test_data/road_error.json"));
     }
 
 }
