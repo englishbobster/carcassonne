@@ -9,7 +9,6 @@ import org.stos.carcassonne.tile.reader.type.ActiveFeature;
 import org.stos.carcassonne.tile.reader.type.PassiveFeature;
 import org.stos.carcassonne.tile.reader.type.TileDefinition;
 import org.stos.carcassonne.tile.reader.type.TileDefinition.Port;
-import org.stos.carcassonne.tile.reader.type.TileDefinitionException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,10 +16,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.stos.carcassonne.tile.reader.type.PortType.F;
 import static org.stos.carcassonne.tile.reader.type.PortType.R;
-import static org.stos.carcassonne.tile.reader.type.TileDefinition.*;
+import static org.stos.carcassonne.tile.reader.type.TileDefinition.CompositeId;
 
 @ExtendWith(SpringExtension.class)
 public class TileResourceLoaderTest {
