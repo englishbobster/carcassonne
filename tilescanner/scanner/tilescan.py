@@ -5,23 +5,25 @@ import matplotlib.pyplot as plt
 
 def do_something():
     # === Load & Resize ===
+    tile_side = 300
     img = cv2.imread("../test_images/tile.jpg")
-    resized = cv2.resize(img, (300, 300))
+    resized = cv2.resize(img, (tile_side, tile_side))
     hsv = cv2.cvtColor(resized, cv2.COLOR_BGR2HSV)
 
     # === HSV Feature Ranges ===
     masks = {
-        "road": cv2.inRange(hsv, (0, 0, 200), (180, 40, 255)),          # white
-        "city": cv2.inRange(hsv, (10, 50, 50), (30, 255, 255)),         # yellow/brown
-        "field": cv2.inRange(hsv, (36, 25, 25), (90, 255, 255))         # green
+        "R": cv2.inRange(hsv, (0, 0, 200), (180, 40, 255)),          # white
+        "C": cv2.inRange(hsv, (10, 50, 50), (30, 255, 255)),         # yellow/brown
+        "F": cv2.inRange(hsv, (36, 25, 25), (90, 255, 255))         # green
     }
 
     grid = []
-    cell_size = 100
+    cells_per_side = 3
+    cell_size = tile_side//cells_per_side
 
-    for row in range(3):
+    for row in range(cells_per_side):
         row_labels = []
-        for col in range(3):
+        for col in range(cells_per_side):
             x1, y1 = col * cell_size, row * cell_size
             x2, y2 = x1 + cell_size, y1 + cell_size
 
@@ -44,8 +46,8 @@ def do_something():
     plt.imshow(cv2.cvtColor(resized, cv2.COLOR_BGR2RGB))
 
     # Draw grid and labels
-    for row in range(3):
-        for col in range(3):
+    for row in range(cells_per_side):
+        for col in range(cells_per_side):
             x, y = col * cell_size, row * cell_size
             label = grid[row][col]
             # Draw rectangle
@@ -62,12 +64,12 @@ def do_something():
 
 # === Classify grid ===
 def classify_region(region_masks):
-    if cv2.countNonZero(region_masks["road"]) > 0:
-        return "road"
-    elif cv2.countNonZero(region_masks["city"]) > 0:
-        return "city"
+    if cv2.countNonZero(region_masks["R"]) > 0:
+        return "R"
+    elif cv2.countNonZero(region_masks["C"]) > 0:
+        return "C"
     else:
-        return "field"
+        return "F"
 
 if __name__ == '__main__':
     do_something()
