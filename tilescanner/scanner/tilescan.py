@@ -3,6 +3,22 @@ import json
 import cv2
 import matplotlib.pyplot as plt
 
+EDGE_THICKNESS = 10
+EDGE_PORT_COORDS = {
+    1: (0, 0, 100, EDGE_THICKNESS),
+    2: (100, 0, 200, EDGE_THICKNESS),
+    3: (200, 0, 300, EDGE_THICKNESS),
+    4: (300 - EDGE_THICKNESS, 0, 300, 100),
+    5: (300 - EDGE_THICKNESS, 100, 300, 200),
+    6: (300 - EDGE_THICKNESS, 200, 300,300),
+    7: (200, 300 - EDGE_THICKNESS, 300,300),
+    8: (100, 300 - EDGE_THICKNESS, 200, 300),
+    9: (0, 300 - EDGE_THICKNESS, 100, 300),
+    10: (0, 200, EDGE_THICKNESS, 300),
+    11: (0, 100, EDGE_THICKNESS, 200),
+    12: (0, 0, EDGE_THICKNESS, 100)
+}
+
 def entry():
     # === Prepare and Normalize the image ===
     tile_side = 300
