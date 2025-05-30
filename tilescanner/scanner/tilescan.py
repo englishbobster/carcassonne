@@ -52,18 +52,17 @@ def classify_edges(masks, tile_side):
     ports = []
     cells_per_side = 3
     cell_size = tile_side // cells_per_side
-    for row in range(cells_per_side):
-        row_labels = []
-        for col in range(cells_per_side):
-            x1, y1 = col * cell_size, row * cell_size
-            x2, y2 = x1 + cell_size, y1 + cell_size
+    row_labels = []
+    for port_coord in range(12):
+        x1, y1 = EDGE_PORT_COORDS[port_coord + 1][0], EDGE_PORT_COORDS[port_coord + 1][1]
+        x2, y2 = x1 + EDGE_PORT_COORDS[port_coord + 1][2], EDGE_PORT_COORDS[port_coord + 1][3]
 
-            region_masks = {
-                key: mask[y1:y2, x1:x2] for key, mask in masks.items()
-            }
+        region_masks = {
+            key: mask[y1:y2, x1:x2] for key, mask in masks.items()
+        }
 
-            label = label_region(region_masks)
-            row_labels.append(label)
+        label = label_region(region_masks)
+        row_labels.append(label)
         ports.append(row_labels)
     return cell_size, cells_per_side, ports
 
