@@ -19,11 +19,12 @@ EDGE_PORT_COORDS = {
     12: (0, 0, EDGE_THICKNESS, 100)
 }
 
+TILE_SIDE = 300
+
 def entry():
     # === Prepare and Normalize the image ===
-    tile_side = 300
     img = cv2.imread("../test_images/tile.jpg")
-    resized = cv2.resize(img, (tile_side, tile_side))
+    resized = cv2.resize(img, (TILE_SIDE, TILE_SIDE))
     hsv = cv2.cvtColor(resized, cv2.COLOR_BGR2HSV)
 
     # === HSV Feature Range Colours ===
@@ -34,25 +35,20 @@ def entry():
     }
 
     # === Determine the edges ===
-    cell_size, cells_per_side, grid = classify_edges(masks, tile_side)
+    ports = classify_edges(masks)
 
     # === Save JSON ===
     with open("tile_quadrants.json", "w") as f:
-        json.dump({"grid": grid}, f, indent=2)
+        json.dump({"grid": ports}, f, indent=2)
 
     print("✅ Grid classification saved to tile_quadrants.json")
 
     # === Plot Result ===
-    plt.figure(figsize=(6, 6))
-    plt.imshow(cv2.cvtColor(resized, cv2.COLOR_BGR2RGB))
-    draw_ports(cell_size, cells_per_side, grid)
+    draw_ports(resized,ports)
 
 
-def classify_edges(masks, tile_side):
+def classify_edges(masks):
     ports = []
-    cells_per_side = 3
-    cell_size = tile_side // cells_per_side
-    row_labels = []
     for port_coord in range(12):
         x1, y1 = EDGE_PORT_COORDS[port_coord + 1][0], EDGE_PORT_COORDS[port_coord + 1][1]
         x2, y2 = x1 + EDGE_PORT_COORDS[port_coord + 1][2], EDGE_PORT_COORDS[port_coord + 1][3]
@@ -62,24 +58,27 @@ def classify_edges(masks, tile_side):
         }
 
         label = label_region(region_masks)
-        row_labels.append(label)
-        ports.append(row_labels)
-    return cell_size, cells_per_side, ports
+        ports.append(label)
+    return ports
 
 
-def draw_ports(cell_size, cells_per_side, ports):
-    # Draw grid and labels
-    for row in range(cells_per_side):
-        for col in range(cells_per_side):
-            x, y = col * cell_size, row * cell_size
-            label = ports[row][col]
-            # Draw rectangle
-            rect = plt.Rectangle((x, y), cell_size, cell_size, linewidth=1.5, edgecolor='red', facecolor='none')
-            plt.gca().add_patch(rect)
-            # Draw label
-            plt.text(x + 50, y + 55, label, color='white', fontsize=9, ha='center', va='center',
-                     bbox=dict(facecolor='black', alpha=0.6, boxstyle='round'))
-    plt.title("Quadrant Feature Classification")
+def draw_ports(image, ports):
+    plt.figure(figsize=(6, 6))
+    plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    # Draw edges and labels
+    for port_coord in range(12):
+        x, y = EDGE_PORT_COORDS[port_coord + 1][0], EDGE_PORT_COORDS[port_coord + 1][1]
+        label = ports[port_coord]
+        # Draw rectangle
+        if port_coord in range(3) or port_coord in range(6, 9):
+            rect = plt.Rectangle((x, y), 100, 10, linewidth=1.5, edgecolor='red', facecolor='none')
+        else:
+            rect = plt.Rectangle((x, y), 10, 100, linewidth=1.5, edgecolor='red', facecolor='none')
+        plt.gca().add_patch(rect)
+        # Draw label
+        plt.text(x + 10, y + 15, label, color='white', fontsize=9, ha='center', va='center',
+                 bbox=dict(facecolor='black', alpha=0.6, boxstyle='round'))
+    plt.title("Edge Feature Classification")
     plt.axis('off')
     plt.tight_layout()
     plt.show()
