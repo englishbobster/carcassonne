@@ -4,6 +4,7 @@ import cv2
 import matplotlib.pyplot as plt
 
 EDGE_THICKNESS = 10
+TILE_SIDE = 300
 EDGE_PORT_COORDS = {
     1: (0, 0, 100, EDGE_THICKNESS),
     2: (100, 0, 200, EDGE_THICKNESS),
@@ -19,7 +20,6 @@ EDGE_PORT_COORDS = {
     12: (0, 0, EDGE_THICKNESS, 100)
 }
 
-TILE_SIDE = 300
 
 def entry():
     # === Prepare and Normalize the image ===
