@@ -25,8 +25,8 @@ def entry():
     # === Prepare and Normalize the image ===
     img = cv2.imread("../test_images/tile_latest.jpg")
     resized_image = cv2.resize(img, (TILE_SIDE, TILE_SIDE))
-    hsv = cv2.cvtColor(resized_image, cv2.COLOR_BGR2HSV)
-    ports = classify_ports(hsv)
+    hsv_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2HSV)
+    ports = classify_ports(hsv_image)
     draw_ports(resized_image, ports)
     write_json_file(ports)
 
