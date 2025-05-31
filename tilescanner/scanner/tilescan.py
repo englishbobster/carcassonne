@@ -23,38 +23,40 @@ EDGE_PORT_COORDS = {
 
 def entry():
     # === Prepare and Normalize the image ===
-    img = cv2.imread("../test_images/tile.jpg")
-    resized = cv2.resize(img, (TILE_SIDE, TILE_SIDE))
-    hsv = cv2.cvtColor(resized, cv2.COLOR_BGR2HSV)
+    img = cv2.imread("../test_images/tile_2.jpg")
+    resized_image = cv2.resize(img, (TILE_SIDE, TILE_SIDE))
+    hsv = cv2.cvtColor(resized_image, cv2.COLOR_BGR2HSV)
 
     # === HSV Feature Range Colours ===
     masks = {
         "R": cv2.inRange(hsv, (0, 0, 200), (180, 40, 255)),  # white
-        "C": cv2.inRange(hsv, (10, 50, 50), (30, 255, 255)),  # yellow/brown
+        "C": cv2.inRange(hsv, (44, 50, 50), (30, 255, 255)),  # yellow/brown
         "F": cv2.inRange(hsv, (36, 25, 25), (90, 255, 255))  # green
     }
 
     ports = classify_ports(masks)
+    draw_ports(resized_image, ports)
+    write_json_file(ports)
 
-    draw_ports(resized,ports)
 
-    with open("tile_quadrants.json", "w") as f:
-        json.dump({"grid": ports}, f, indent=2)
-    print("✅ Grid classification saved to tile_quadrants.json")
+def write_json_file(ports):
+    with open("tile.json", "w") as f:
+        json.dump({"ports": ports}, f, indent=2)
+    print("✅ Ports saved to tile.json")
 
 
 def classify_ports(masks):
     ports = []
-    for port_coord in range(12):
-        x1, y1 = EDGE_PORT_COORDS[port_coord + 1][0], EDGE_PORT_COORDS[port_coord + 1][1]
-        x2, y2 = x1 + EDGE_PORT_COORDS[port_coord + 1][2], EDGE_PORT_COORDS[port_coord + 1][3]
+    for port_coord in range(1, 13):
+        x1, y1 = EDGE_PORT_COORDS[port_coord][0], EDGE_PORT_COORDS[port_coord][1]
+        x2, y2 = x1 + EDGE_PORT_COORDS[port_coord][2], EDGE_PORT_COORDS[port_coord][3]
 
         region_masks = {
             key: mask[y1:y2, x1:x2] for key, mask in masks.items()
         }
 
         classification = classify_region(region_masks)
-        ports.append(classification)
+        ports.append({"id": port_coord, "type": classification})
     return ports
 
 
@@ -73,7 +75,7 @@ def draw_ports(image, ports):
 
     for port_coord in range(12):
         x, y = EDGE_PORT_COORDS[port_coord + 1][0], EDGE_PORT_COORDS[port_coord + 1][1]
-        label = ports[port_coord]
+        label = ports[port_coord]["type"]
 
         if port_coord in range(3) or port_coord in range(6, 9):
             rect = plt.Rectangle((x, y), 100, 10, linewidth=1.5, edgecolor='red', facecolor='none')
