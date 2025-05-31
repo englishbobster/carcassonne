@@ -23,18 +23,10 @@ EDGE_PORT_COORDS = {
 
 def entry():
     # === Prepare and Normalize the image ===
-    img = cv2.imread("../test_images/tile_2.jpg")
+    img = cv2.imread("../test_images/tile_latest.jpg")
     resized_image = cv2.resize(img, (TILE_SIDE, TILE_SIDE))
     hsv = cv2.cvtColor(resized_image, cv2.COLOR_BGR2HSV)
-
-    # === HSV Feature Range Colours ===
-    masks = {
-        "R": cv2.inRange(hsv, (0, 0, 200), (180, 40, 255)),  # white
-        "C": cv2.inRange(hsv, (44, 50, 50), (30, 255, 255)),  # yellow/brown
-        "F": cv2.inRange(hsv, (36, 25, 25), (90, 255, 255))  # green
-    }
-
-    ports = classify_ports(masks)
+    ports = classify_ports(hsv)
     draw_ports(resized_image, ports)
     write_json_file(ports)
 
@@ -45,8 +37,17 @@ def write_json_file(ports):
     print("✅ Ports saved to tile.json")
 
 
-def classify_ports(masks):
+def classify_ports(image):
     ports = []
+
+    masks = {
+        # === HSV field, city and road range colours ===
+        # Conversion from HSV colorpicker values to cv2: colorpicker => (/2, *2.55, *2.55) => cv2
+        "R": cv2.inRange(image, (0, 0, 200), (180, 40, 255)),  # white
+        "C": cv2.inRange(image, (44, 50, 50), (30, 255, 255)),  # yellow/brown
+        "F": cv2.inRange(image, (36, 25, 25), (90, 255, 255))  # green
+    }
+
     for port_coord in range(1, 13):
         x1, y1 = EDGE_PORT_COORDS[port_coord][0], EDGE_PORT_COORDS[port_coord][1]
         x2, y2 = x1 + EDGE_PORT_COORDS[port_coord][2], EDGE_PORT_COORDS[port_coord][3]
