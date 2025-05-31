@@ -92,7 +92,7 @@ def draw_ports(image, ports):
 def label_region(region_masks):
     if cv2.countNonZero(region_masks["R"]) > 0:
         return "R"
-    elif cv2.countNonZero(region_masks["C"]) > 0:
+    elif cv2.countNonZero(region_masks["C"]) > cv2.countNonZero(region_masks["F"]):
         return "C"
     else:
         return "F"
