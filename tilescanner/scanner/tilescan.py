@@ -65,18 +65,23 @@ def classify_edges(masks):
 def draw_ports(image, ports):
     plt.figure(figsize=(6, 6))
     plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-    # Draw edges and labels
+
     for port_coord in range(12):
         x, y = EDGE_PORT_COORDS[port_coord + 1][0], EDGE_PORT_COORDS[port_coord + 1][1]
         label = ports[port_coord]
-        # Draw rectangle
+
         if port_coord in range(3) or port_coord in range(6, 9):
             rect = plt.Rectangle((x, y), 100, 10, linewidth=1.5, edgecolor='red', facecolor='none')
         else:
             rect = plt.Rectangle((x, y), 10, 100, linewidth=1.5, edgecolor='red', facecolor='none')
         plt.gca().add_patch(rect)
-        # Draw label
-        plt.text(x + 10, y + 15, label, color='white', fontsize=9, ha='center', va='center',
+
+        x, y = rect.get_xy()
+        width = rect.get_width()
+        height = rect.get_height()
+        center_x = x + width / 2
+        center_y = y + height / 2
+        plt.text(center_x, center_y, label, color='white', fontsize=9, ha='center', va='center',
                  bbox=dict(facecolor='black', alpha=0.6, boxstyle='round'))
     plt.title("Edge Feature Classification")
     plt.axis('off')
