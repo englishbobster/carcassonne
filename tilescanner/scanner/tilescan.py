@@ -23,7 +23,7 @@ EDGE_PORT_COORDS = {
 
 def entry():
     # === Prepare and Normalize the image ===
-    img = cv2.imread("../test_images/tile_latest.jpg")
+    img = cv2.imread("../test_images/tile_old.jpg")
     resized_image = cv2.resize(img, (TILE_SIDE, TILE_SIDE))
     hsv_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2HSV)
     ports = classify_ports(hsv_image)
@@ -44,7 +44,7 @@ def classify_ports(image):
         # === HSV field, city and road range colours ===
         # Conversion from HSV colorpicker values to cv2: colorpicker => (/2, *2.55, *2.55) => cv2
         "R": cv2.inRange(image, (0, 0, 200), (180, 40, 255)),  # white
-        "C": cv2.inRange(image, (44, 50, 50), (30, 255, 255)),  # yellow/brown
+        "C": cv2.inRange(image, (10, 50, 50), (30, 255, 255)),  # yellow/brown
         "F": cv2.inRange(image, (36, 25, 25), (90, 255, 255))  # green
     }
 
@@ -74,14 +74,15 @@ def draw_ports(image, ports):
     plt.figure(figsize=(6, 6))
     plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
-    for port_coord in range(12):
-        x, y = EDGE_PORT_COORDS[port_coord + 1][0], EDGE_PORT_COORDS[port_coord + 1][1]
-        label = ports[port_coord]["type"]
+    for port_coord in range(1, 13):
+        x1, y1 = EDGE_PORT_COORDS[port_coord][0], EDGE_PORT_COORDS[port_coord][1]
+        x2, y2 = EDGE_PORT_COORDS[port_coord][2], EDGE_PORT_COORDS[port_coord][3]
+        label = ports[port_coord - 1]["type"]
 
-        if port_coord in range(3) or port_coord in range(6, 9):
-            rect = plt.Rectangle((x, y), 100, EDGE_THICKNESS, linewidth=1.5, edgecolor='red', facecolor='none')
+        if port_coord in range(1, 4) or port_coord in range(7, 10):
+            rect = plt.Rectangle((x1, y1), (x2 - x1), EDGE_THICKNESS, linewidth=1.5, edgecolor='red', facecolor='none')
         else:
-            rect = plt.Rectangle((x, y), EDGE_THICKNESS, 100, linewidth=1.5, edgecolor='red', facecolor='none')
+            rect = plt.Rectangle((x1, y1), EDGE_THICKNESS, (y2 - y1), linewidth=1.5, edgecolor='red', facecolor='none')
 
         plt.gca().add_patch(rect)
         add_region_label(label, rect)
