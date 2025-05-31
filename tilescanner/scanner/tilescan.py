@@ -50,7 +50,7 @@ def classify_ports(image):
 
     for port_coord in range(1, 13):
         x1, y1 = EDGE_PORT_COORDS[port_coord][0], EDGE_PORT_COORDS[port_coord][1]
-        x2, y2 = x1 + EDGE_PORT_COORDS[port_coord][2], EDGE_PORT_COORDS[port_coord][3]
+        x2, y2 = EDGE_PORT_COORDS[port_coord][2], EDGE_PORT_COORDS[port_coord][3]
 
         region_masks = {
             key: mask[y1:y2, x1:x2] for key, mask in masks.items()
@@ -79,9 +79,9 @@ def draw_ports(image, ports):
         label = ports[port_coord]["type"]
 
         if port_coord in range(3) or port_coord in range(6, 9):
-            rect = plt.Rectangle((x, y), 100, 10, linewidth=1.5, edgecolor='red', facecolor='none')
+            rect = plt.Rectangle((x, y), 100, EDGE_THICKNESS, linewidth=1.5, edgecolor='red', facecolor='none')
         else:
-            rect = plt.Rectangle((x, y), 10, 100, linewidth=1.5, edgecolor='red', facecolor='none')
+            rect = plt.Rectangle((x, y), EDGE_THICKNESS, 100, linewidth=1.5, edgecolor='red', facecolor='none')
 
         plt.gca().add_patch(rect)
         add_region_label(label, rect)
@@ -96,9 +96,9 @@ def add_region_label(label, rect):
     x, y = rect.get_xy()
     width = rect.get_width()
     height = rect.get_height()
-    center_x = x + width / 2
-    center_y = y + height / 2
-    plt.text(center_x, center_y, label, color='white', fontsize=9, ha='center', va='center',
+    center_x = x + width // 2
+    center_y = y + height // 2
+    plt.text(center_x, center_y, label, color='white', fontsize=12, ha='center', va='center',
              bbox=dict(facecolor='black', alpha=0.6, boxstyle='round'))
 
 
