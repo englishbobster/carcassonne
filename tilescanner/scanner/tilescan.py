@@ -34,20 +34,16 @@ def entry():
         "F": cv2.inRange(hsv, (36, 25, 25), (90, 255, 255))  # green
     }
 
-    # === Determine the edges ===
-    ports = classify_edges(masks)
+    ports = classify_ports(masks)
 
-    # === Save JSON ===
-    with open("tile_quadrants.json", "w") as f:
-        json.dump({"grid": ports}, f, indent=2)
-
-    print("✅ Grid classification saved to tile_quadrants.json")
-
-    # === Plot Result ===
     draw_ports(resized,ports)
 
+    with open("tile_quadrants.json", "w") as f:
+        json.dump({"grid": ports}, f, indent=2)
+    print("✅ Grid classification saved to tile_quadrants.json")
 
-def classify_edges(masks):
+
+def classify_ports(masks):
     ports = []
     for port_coord in range(12):
         x1, y1 = EDGE_PORT_COORDS[port_coord + 1][0], EDGE_PORT_COORDS[port_coord + 1][1]
@@ -57,9 +53,18 @@ def classify_edges(masks):
             key: mask[y1:y2, x1:x2] for key, mask in masks.items()
         }
 
-        label = label_region(region_masks)
-        ports.append(label)
+        classification = classify_region(region_masks)
+        ports.append(classification)
     return ports
+
+
+def classify_region(region_masks):
+    if cv2.countNonZero(region_masks["R"]) > 0:
+        return "R"
+    elif cv2.countNonZero(region_masks["C"]) > cv2.countNonZero(region_masks["F"]):
+        return "C"
+    else:
+        return "F"
 
 
 def draw_ports(image, ports):
@@ -74,28 +79,25 @@ def draw_ports(image, ports):
             rect = plt.Rectangle((x, y), 100, 10, linewidth=1.5, edgecolor='red', facecolor='none')
         else:
             rect = plt.Rectangle((x, y), 10, 100, linewidth=1.5, edgecolor='red', facecolor='none')
-        plt.gca().add_patch(rect)
 
-        x, y = rect.get_xy()
-        width = rect.get_width()
-        height = rect.get_height()
-        center_x = x + width / 2
-        center_y = y + height / 2
-        plt.text(center_x, center_y, label, color='white', fontsize=9, ha='center', va='center',
-                 bbox=dict(facecolor='black', alpha=0.6, boxstyle='round'))
+        plt.gca().add_patch(rect)
+        add_region_label(label, rect)
+
     plt.title("Edge Feature Classification")
     plt.axis('off')
     plt.tight_layout()
     plt.show()
 
 
-def label_region(region_masks):
-    if cv2.countNonZero(region_masks["R"]) > 0:
-        return "R"
-    elif cv2.countNonZero(region_masks["C"]) > cv2.countNonZero(region_masks["F"]):
-        return "C"
-    else:
-        return "F"
+def add_region_label(label, rect):
+    x, y = rect.get_xy()
+    width = rect.get_width()
+    height = rect.get_height()
+    center_x = x + width / 2
+    center_y = y + height / 2
+    plt.text(center_x, center_y, label, color='white', fontsize=9, ha='center', va='center',
+             bbox=dict(facecolor='black', alpha=0.6, boxstyle='round'))
+
 
 if __name__ == '__main__':
     entry()
