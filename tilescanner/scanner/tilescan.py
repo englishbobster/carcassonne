@@ -23,7 +23,7 @@ EDGE_PORT_COORDS = {
 
 def entry():
     # === Prepare and Normalize the image ===
-    img = cv2.imread("../test_images/tile_old.jpg")
+    img = cv2.imread("../test_images/tile_latest.jpg")
     resized_image = cv2.resize(img, (TILE_SIDE, TILE_SIDE))
     hsv_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2HSV)
     ports = classify_ports(hsv_image)
@@ -43,7 +43,7 @@ def classify_ports(image):
     masks = {
         # === HSV field, city and road range colours ===
         # Conversion from HSV colorpicker values to cv2: colorpicker => (/2, *2.55, *2.55) => cv2
-        "R": cv2.inRange(image, (0, 0, 200), (180, 40, 255)),  # white
+        "R": cv2.inRange(image, (0, 0, 230), (180, 25, 255)),  # white
         "C": cv2.inRange(image, (10, 50, 50), (30, 255, 255)),  # yellow/brown
         "F": cv2.inRange(image, (36, 25, 25), (90, 255, 255))  # green
     }
