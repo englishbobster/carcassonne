@@ -23,12 +23,26 @@ EDGE_PORT_COORDS = {
 
 def entry():
     # === Prepare and Normalize the image ===
-    img = cv2.imread("../test_images/tile_latest.jpg")
+    img = cv2.imread("../test_images/tile_city_3_side.jpg")
+    img = remove_white_border(img)
     resized_image = cv2.resize(img, (TILE_SIDE, TILE_SIDE))
     hsv_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2HSV)
     ports = classify_ports(hsv_image)
     draw_ports(resized_image, ports)
     write_json_file(ports)
+
+def remove_white_border(image, threshold=245):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # Create a binary mask of "non-white" areas
+    _, mask = cv2.threshold(gray, threshold, 255, cv2.THRESH_BINARY_INV)
+
+    # Find bounding box of the non-white area
+    coords = cv2.findNonZero(mask)
+    x, y, w, h = cv2.boundingRect(coords)
+
+    # Crop the image to that bounding box
+    return image[y:y+h, x:x+w]
 
 
 def write_json_file(ports):
