@@ -59,7 +59,7 @@ def classify_ports(image):
         # Conversion from HSV colorpicker values to cv2: colorpicker => (/2, *2.55, *2.55) => cv2
         "R": cv2.inRange(image, (0, 0, 230), (180, 25, 255)),  # white
         "C": cv2.inRange(image, (10, 50, 50), (30, 255, 255)),  # yellow/brown
-        "F": cv2.inRange(image, (36, 25, 25), (90, 255, 255))  # green
+        "F": cv2.inRange(image, (50, 100, 100), (70, 255, 255))  # green
     }
 
     for port_coord in range(1, 13):
